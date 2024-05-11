@@ -1,21 +1,19 @@
-# Linker flags
-LDFLAGS :=
-
-# Compiler flags
-CFLAGS := -g
-
-# Directories
-SRCDIR := src
+CC := clang
 BUILDDIR := build
+SRCDIR := src
+TARGET := $(BUILDDIR)/main
+MODE ?= debug
 
-# Source files
 SRCS := $(wildcard $(SRCDIR)/*.c)
-
-# Object files
 OBJS := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
 
-# Target executable
-TARGET := main
+ifeq ($(MODE), release)
+	CFLAGS := -Wall -Wextra -O2
+else
+	CFLAGS := -Wall -Wextra -g -O0
+endif
+
+LDFLAGS :=
 
 .PHONY: all clean
 
@@ -31,4 +29,4 @@ $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	rm -rf $(BUILDDIR)
